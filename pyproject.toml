@@ -5,7 +5,7 @@ description = ""
 authors = ["RuzzyRullezz <ruzzyrullezz@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9.7"
+python = "^3.9"
 SQLAlchemy = "^1.4.23"
 alembic = "^1.7.1"
 fastapi = "^0.68.1"
@@ -15,6 +15,9 @@ psycopg2 = "^2.9.1"
 psycopg2-binary = "^2.9.1"
 flake8 = "^3.9.2"
 telegram-log = "^1.0.12"
+pydantic = "^1.8.2"
+requests = "^2.26.0"
+pendulum = "^2.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

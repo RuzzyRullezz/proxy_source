@@ -64,3 +64,7 @@ setup_logging: Callable[[], None] = functools.partial(
     tg_chat=TG_CHAT,
     sentry_dsn=SENTRY_DSN,
 )
+
+# Proxy Sources
+# https://best-proxies.ru/
+BESTPROXIES_API_KEY: Secret = config("BESTPROXIES_API_KEY", cast=Secret, default=None)
