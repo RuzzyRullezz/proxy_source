@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "proxy_source"
+version = "0.0.1"
+description = ""
+authors = ["RuzzyRullezz <ruzzyrullezz@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9.7"
+SQLAlchemy = "^1.4.23"
+alembic = "^1.7.1"
+fastapi = "^0.68.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
