@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 120
+exclude = .git, __pycache__, build, dist, tests, proxy_source/db/migrations/versions
+max-complexity = 10
