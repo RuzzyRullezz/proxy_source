@@ -1,5 +1,5 @@
 from proxy_source.db.sessions import SessionLocal
-from proxy_source.utils.orm import create_in_storage
+from proxy_source.utils.database import create_in_storage
 from proxy_source.vendors.rest_api.outgoing_request_log.context import LogContextOutgoing
 
 from . import db_scheme
