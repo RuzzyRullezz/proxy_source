@@ -2,8 +2,8 @@ import logging.config
 import socket
 from typing import Dict, Optional, Any
 
-from raven import Client  # type: ignore
-from raven.transport import RequestsHTTPTransport  # type: ignore
+from raven import Client
+from raven.transport import RequestsHTTPTransport
 
 
 def get_dict_config(

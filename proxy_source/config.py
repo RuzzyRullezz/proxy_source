@@ -2,7 +2,7 @@ import functools
 import pathlib
 from typing import List, Callable
 
-from sqlalchemy.engine.url import URL  # type: ignore
+from sqlalchemy.engine.url import URL
 from starlette.config import Config
 from starlette.datastructures import Secret
 
@@ -59,5 +59,8 @@ TG_CHAT: str = config("TG_CHAT", cast=int, default=None)
 SENTRY_DSN: str = config("SENTRY_DSN", cast=str, default=None)
 # Loggers startup
 setup_logging: Callable[[], None] = functools.partial(
-    loggers.setup, tg_token=TG_TOKEN, tg_chat=TG_CHAT, sentry_dsn=SENTRY_DSN
+    loggers.setup,
+    tg_token=TG_TOKEN,
+    tg_chat=TG_CHAT,
+    sentry_dsn=SENTRY_DSN,
 )
