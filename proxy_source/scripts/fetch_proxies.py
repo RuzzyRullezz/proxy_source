@@ -17,8 +17,8 @@ async def fetch():
     elapsed_time_seconds = int((end - start).total_seconds())
     logger.info(f'Start time: {start}'
                 f'\nEnd time: {end}'
-                f'\nElapsed time (seconds): {elapsed_time_seconds}'
-                f'New proxies count: {new_proxies_cnt}')
+                f'\nElapsed time: {elapsed_time_seconds} seconds'
+                f'\nNew proxies count: {new_proxies_cnt}.')
 
 
 def main():
