@@ -1,7 +1,7 @@
 import datetime
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, Dict, Literal, Any
+from typing import Optional, Dict, Literal
 
 
 @dataclass(frozen=True)
