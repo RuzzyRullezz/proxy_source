@@ -23,7 +23,7 @@ ALLOWED_ORIGINS: List[str] = [
 
 TESTING: bool = config("TESTING", cast=bool, default=False)
 
-DB_DRIVER: str = config("DB_DRIVER", default="postgresql")
+DB_DRIVER: str = config("DB_DRIVER", default="postgresql+asyncpg")
 DB_HOST: str = config("DB_HOST", default='127.0.0.1')
 DB_PORT: int = config("DB_PORT", cast=int, default=5432)
 DB_USER: str = config("DB_USER", default='proxy_source')
@@ -64,6 +64,8 @@ setup_logging: Callable[[], None] = functools.partial(
     tg_chat=TG_CHAT,
     sentry_dsn=SENTRY_DSN,
 )
+
+PROXY_CHECK_MAX_WORKERS: int = config("PROXY_CHECK_MAX_WORKERS", cast=int, default=50)
 
 # Proxy Sources
 # https://best-proxies.ru/

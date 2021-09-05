@@ -8,7 +8,6 @@ from .service import check_proxy, Report
 StopUnit = None
 InQueueElementType = Union[Proxy, StopUnit]
 OutQueueElementType = Union[Proxy, Exception, StopUnit]
-MAX_WORKERS = 150
 
 
 async def proxy_check_worker(
@@ -73,7 +72,7 @@ class Master:
             await queue.put(exc)
             raise
 
-    def __init__(self, max_workers: int = MAX_WORKERS):
+    def __init__(self, max_workers: int):
         self.in_queue = asyncio.Queue()
         self.out_queue = asyncio.Queue()
         self.workers = self.create_workers(self.in_queue, self.out_queue, max_workers, proxy_check_worker)
@@ -91,8 +90,8 @@ class Master:
 
 async def get_proxy_reports_gen(
         proxies_list: List[Proxy],
-        parallels_cnt: int = MAX_WORKERS,
+        parallels_cnt: int,
 ) -> Generator[Report, None, None]:
     # yield from ... doesn't work in coroutines
-    async for report in Master(max_workers=parallels_cnt).run(proxies_list):
+    async for report in Master(parallels_cnt).run(proxies_list):
         yield report

@@ -1,9 +1,19 @@
 import logging.config
 import socket
-from typing import Dict, Optional, Any
+from typing import Dict, Optional, Any, List, Type
 
+from anyio import BrokenResourceError
 from raven import Client
 from raven.transport import RequestsHTTPTransport
+
+
+class NonLoggableExceptionsFilter(logging.Filter):
+    def filter(self, record):
+        exception_types: List[Type[Exception]] = [
+            BrokenResourceError,
+        ]
+        exception_type = record.exc_info[0]
+        return exception_type not in exception_types
 
 
 def get_dict_config(
@@ -23,10 +33,16 @@ def get_dict_config(
                 "format": "%(asctime)s [%(levelname)s] [{0} %(name)s:%(lineno)s] %(message)s".format(hostname)
             }
         },
-        "filters": {},
+        "filters": {
+            "non_loggable_exceptions": {
+                "()": NonLoggableExceptionsFilter,
+            },
+        },
         "handlers": {
             "console_handler": {
+                "level": "ERROR",
                 "class": "logging.StreamHandler",
+                "filters": ["non_loggable_exceptions"],
             },
             "telegram_handler": {
                 "class": "telegram_log.handler.TelegramHandler",
@@ -35,7 +51,7 @@ def get_dict_config(
                 "err_log_name": None,
                 "level": "ERROR",
                 "formatter": "verbose",
-                "filters": [],
+                "filters": ["non_loggable_exceptions"],
             } if tg_token and tg_token else null_handler,
             "sentry_handler": {
                 "class": "raven.handlers.logging.SentryHandler",
@@ -43,12 +59,12 @@ def get_dict_config(
                 "dsn": sentry_dsn,
                 "level": "ERROR",
                 "transport": RequestsHTTPTransport,
-                "filters": [],
+                "filters": ["non_loggable_exceptions"],
             } if sentry_dsn else null_handler,
         },
         "loggers": {
             "root": {
-                "level": "INFO",
+                "level": "DEBUG",
                 "handlers": ["console_handler", "telegram_handler", "sentry_handler"]
             },
         }

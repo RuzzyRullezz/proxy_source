@@ -1,12 +1,15 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from proxy_source import config
 
-
-engine = create_engine(
-    config.DB_DSN,
-    pool_pre_ping=True,
+async_engine = create_async_engine(
+    str(config.DB_DSN),
+    echo=True,
 )
 
-SessionLocal = sessionmaker(autocommit=True, autoflush=False, expire_on_commit=True, bind=engine)
+
+def get_async_db_session() -> AsyncSession:
+    session_factory = sessionmaker(async_engine, class_=AsyncSession)
+    session = session_factory()
+    return session
