@@ -10,6 +10,7 @@ from . import exceptions
 
 @dataclass
 class Report:
+    proxy: Proxy
     is_alive: bool
     is_anon: Optional[bool]
     elapsed_time_seconds: Optional[float]
@@ -31,6 +32,7 @@ async def check_proxy(proxy: Proxy) -> Report:
         is_anon = None
         exception = exc.__cause__
     return Report(
+        proxy=proxy,
         is_alive=is_alive,
         is_anon=is_anon,
         elapsed_time_seconds=elapsed_time_seconds,

@@ -10,7 +10,7 @@ def utc_now():
     return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 
 
-class ClientContextMixin:
+class ContextMixin:
     encoding = 'utf-8'
 
     def create_context(self, request: Request) -> LogContextOutgoing:
@@ -37,7 +37,7 @@ class ClientContextMixin:
         context.exception = exception_log
 
 
-class TraceClient(Client, ClientContextMixin):
+class TraceClient(Client, ContextMixin):
     log_save: OutgoingLogSaver
 
     def __init__(self, log_save: OutgoingLogSaver, *args, **kwargs):
@@ -57,7 +57,7 @@ class TraceClient(Client, ClientContextMixin):
             self.log_save(context)
 
 
-class AsyncTraceClient(AsyncClient, ClientContextMixin):
+class AsyncTraceClient(AsyncClient, ContextMixin):
     log_save: AsyncOutgoingLogSaver
 
     def __init__(self, log_save: AsyncOutgoingLogSaver, *args, **kwargs):

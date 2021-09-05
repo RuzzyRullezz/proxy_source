@@ -25,7 +25,7 @@ class DataRepository:
         except ValidationError:
             raise exceptions.CantParseBestProxiesResponseException(response)
 
-    def get_proxy_list(self) -> List[dto.Proxy]:
+    async def get_proxy_list(self) -> List[dto.Proxy]:
         endpoint = 'proxylist.json'
         query_params = dict(
             key=self.api_key,
@@ -35,6 +35,6 @@ class DataRepository:
             level=1,
             limit=0,
         )
-        response = self.client.send_get(endpoint, query_params=query_params)
+        response = await self.client.send_get(endpoint, query_params=query_params)
         dto_proxies_list: dto.ProxiesList = self.parse(dto.ProxiesList, response)
         return dto_proxies_list.__root__

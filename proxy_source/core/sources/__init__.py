@@ -1,5 +1,5 @@
-from .bestproxies_source import BestProxiesSource
+from . import service
 
 __all__ = [
-    'BestProxiesSource',
+    'service',
 ]

@@ -23,9 +23,9 @@ class Client:
         'Content-Encoding': encoding,
     }
 
-    httpx_client: httpx.Client
+    httpx_client: httpx.AsyncClient
 
-    def __init__(self, httpx_client: httpx.Client):
+    def __init__(self, httpx_client: httpx.AsyncClient):
         self.httpx_client = httpx_client
 
     def get_full_url(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> str:
@@ -37,7 +37,7 @@ class Client:
         body_data: Dict = data.dict()
         return body_data
 
-    def send_request(
+    async def send_request(
             self,
             url: str,
             method: RequestMethodEnum,
@@ -56,14 +56,14 @@ class Client:
             data=body_data,
             headers=self.headers,
         )
-        with self.httpx_client as client:
-            response: httpx.Response = client.send(request, timeout=self.timeout.total_seconds())
+        async with self.httpx_client as client:
+            response: httpx.Response = await client.send(request, timeout=self.timeout.total_seconds())
         return response.content
 
-    def send_get(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> bytes:
+    async def send_get(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> bytes:
         full_url: str = self.get_full_url(endpoint, query_params=query_params)
-        return self.send_request(full_url, self.RequestMethodEnum.get)
+        return await self.send_request(full_url, self.RequestMethodEnum.get)
 
-    def send_post(self, endpoint: str, data: Optional[BaseModel] = None) -> bytes:
+    async def send_post(self, endpoint: str, data: Optional[BaseModel] = None) -> bytes:
         full_url: str = self.get_full_url(endpoint)
-        return self.send_request(full_url, self.RequestMethodEnum.post, data=data)
+        return await self.send_request(full_url, self.RequestMethodEnum.post, data=data)

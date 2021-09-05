@@ -9,5 +9,15 @@ class IpServiceNot200Exception(IpServiceException):
         self.status_code = status_code
 
 
+class IpServiceParseResponseException(IpServiceException):
+    content: bytes
+
+    def __init__(self, content: bytes):
+        self.content = content
+
+    def __str__(self) -> str:
+        return self.content.decode()
+
+
 class IpServiceNetworkException(IpServiceException):
     pass
