@@ -27,10 +27,10 @@ class IpAddressService(ABC):
     async def get_ip(self, proxy: Optional[proxies.Proxy] = None) -> str:
         timeout: datetime.timedelta = datetime.timedelta(seconds=3)
         request: httpx.Request = self.get_request(proxy=proxy)
-        proxies: Optional[str] = None
+        httpx_proxies: Optional[str] = None
         if proxy is not None:
-            proxies = proxy.httpx_format
-        async with self.client_factory(proxies=proxies) as client:
+            httpx_proxies = proxy.httpx_format
+        async with self.client_factory(proxies=httpx_proxies) as client:
             response = await client.send(request, timeout=timeout.total_seconds(), allow_redirects=False)
         if response.status_code != status.HTTP_200_OK:
             raise exceptions.IpServiceNot200Exception(response.status_code)
