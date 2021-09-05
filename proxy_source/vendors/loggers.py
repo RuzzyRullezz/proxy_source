@@ -40,7 +40,7 @@ def get_dict_config(
         },
         "handlers": {
             "console_handler": {
-                "level": "ERROR",
+                "level": "DEBUG",
                 "class": "logging.StreamHandler",
                 "filters": ["non_loggable_exceptions"],
             },
