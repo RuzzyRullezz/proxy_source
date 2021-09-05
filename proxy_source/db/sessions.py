@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from proxy_source import config
 
 async_engine = create_async_engine(
-    str(config.DB_DSN),
+    str(config.DB_DSN_ASYNC),
     echo=True,
 )
 

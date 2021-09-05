@@ -23,14 +23,21 @@ ALLOWED_ORIGINS: List[str] = [
 
 TESTING: bool = config("TESTING", cast=bool, default=False)
 
-DB_DRIVER: str = config("DB_DRIVER", default="postgresql+asyncpg")
 DB_HOST: str = config("DB_HOST", default='127.0.0.1')
 DB_PORT: int = config("DB_PORT", cast=int, default=5432)
 DB_USER: str = config("DB_USER", default='proxy_source')
 DB_PASSWORD: Secret = config("DB_PASSWORD", cast=Secret, default='proxy_source')
 DB_DATABASE: str = config("DB_DATABASE", default='proxy_source')
-DB_DSN: URL = URL(
-    drivername=DB_DRIVER,
+DB_DSN_ASYNC: URL = URL(
+    drivername="postgresql+asyncpg",
+    username=DB_USER,
+    password=DB_PASSWORD,
+    host=DB_HOST,
+    port=DB_PORT,
+    database=DB_DATABASE,
+)
+DB_DSN_SYNC: URL = URL(
+    drivername="postgresql",
     username=DB_USER,
     password=DB_PASSWORD,
     host=DB_HOST,

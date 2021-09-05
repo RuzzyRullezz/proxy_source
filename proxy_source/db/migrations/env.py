@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from proxy_source.config import DB_DSN
+from proxy_source.config import DB_DSN_SYNC
 from proxy_source.db.base import Base
 
 # this is the Alembic Config object, which provides
@@ -16,7 +16,7 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", str(DB_DSN))
+config.set_main_option("sqlalchemy.url", str(DB_DSN_SYNC))
 Base.discover()
 target_metadata = Base.metadata
 
