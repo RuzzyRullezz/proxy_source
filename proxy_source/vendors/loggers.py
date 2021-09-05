@@ -12,6 +12,8 @@ class NonLoggableExceptionsFilter(logging.Filter):
         exception_types: List[Type[Exception]] = [
             BrokenResourceError,
         ]
+        if record.exc_info is None:
+            return True
         exception_type = record.exc_info[0]
         return exception_type not in exception_types
 
