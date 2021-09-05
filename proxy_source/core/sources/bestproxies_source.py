@@ -2,7 +2,7 @@ from typing import List
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
-from proxy_source.vendors.rest_api.outgoing_request_log.requests.client import SessionLoggable
+from proxy_source.vendors.rest_api.outgoing_request_log.httpx.client import TraceClient
 
 from . import base
 from . import bestproxies
@@ -22,7 +22,7 @@ class BestProxiesSource(base.ProxySource):
 
     @staticmethod
     def create_repo_client() -> bestproxies.client.Client:
-        session = SessionLoggable(logs.store.create_outgoing_request_log)
+        session = TraceClient(logs.store.create_outgoing_request_log)
         client = bestproxies.client.Client(session)
         return client
 

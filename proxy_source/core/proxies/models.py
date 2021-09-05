@@ -22,8 +22,7 @@ class Proxy:
     source: SourceEnum
     created_at: datetime.datetime
 
-    @property
-    def requests_format(self) -> Dict[Literal['http', 'https'], str]:
+    def __str__(self) -> str:
         scheme: str = f'{self.protocol}'
         auth_prefix: str
         if self.user is not None and self.password is not None:
@@ -31,7 +30,17 @@ class Proxy:
         else:
             auth_prefix = ''
         uri: str = f'{scheme}://{auth_prefix}{self.ip}:{self.port}'
+        return uri
+
+    @property
+    def requests_format(self) -> Dict[Literal['http', 'https'], str]:
+        uri: str = str(self)
         return {
             'http': uri,
             'https': uri,
         }
+
+    @property
+    def httpx_format(self) -> str:
+        uri: str = str(self)
+        return uri

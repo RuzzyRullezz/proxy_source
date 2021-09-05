@@ -4,9 +4,8 @@ from typing import Dict, Optional
 
 from urllib.parse import urlunsplit, urlencode
 
-import requests
+import httpx
 from pydantic import BaseModel
-from requests import Session, Response
 
 
 class Client:
@@ -24,10 +23,10 @@ class Client:
         'Content-Encoding': encoding,
     }
 
-    session: Session
+    httpx_client: httpx.Client
 
-    def __init__(self, session: Session):
-        self.session = session
+    def __init__(self, httpx_client: httpx.Client):
+        self.httpx_client = httpx_client
 
     def get_full_url(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> str:
         query: str = urlencode(query_params)
@@ -51,13 +50,14 @@ class Client:
             body_data = self.get_body_data(data)
         else:
             raise NotImplementedError(f"Unsupported request method = {method}")
-        prepared_request: requests.PreparedRequest = requests.Request(
+        request: httpx.Request = httpx.Request(
             method.value,
             url,
             data=body_data,
             headers=self.headers,
-        ).prepare()
-        response: Response = self.session.send(prepared_request, timeout=self.timeout.total_seconds())
+        )
+        with self.httpx_client as client:
+            response: httpx.Response = client.send(request, timeout=self.timeout.total_seconds())
         return response.content
 
     def send_get(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> bytes:

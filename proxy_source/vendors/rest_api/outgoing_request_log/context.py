@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Dict, Optional, Callable, Awaitable
 
 
 @dataclass
@@ -20,3 +20,7 @@ class LogContextOutgoing:
 
     elapsed_time: Optional[datetime.timedelta] = None
     exception: Optional[str] = None
+
+
+OutgoingLogSaver = Callable[[LogContextOutgoing], None]
+AsyncOutgoingLogSaver = Callable[[LogContextOutgoing], Awaitable[None]]

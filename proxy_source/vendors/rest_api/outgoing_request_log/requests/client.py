@@ -1,13 +1,9 @@
 import datetime
 import traceback
-from typing import Callable
 
 from requests import PreparedRequest, Response, Session
 
-from ..context import LogContextOutgoing
-
-
-OutgoingLogSaver = Callable[[LogContextOutgoing], None]
+from ..context import LogContextOutgoing, OutgoingLogSaver
 
 
 def utc_now():
