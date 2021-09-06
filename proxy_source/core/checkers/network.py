@@ -127,8 +127,5 @@ def get_real_ip_func() -> GetRealIpFuncType:
     return _get_real_ip_wrapper
 
 
-if config.REAL_IP is None:
-    get_real_ip: GetRealIpFuncType = get_real_ip_func()
-else:
-    def get_real_ip(use_cache: bool = True) -> str:
-        return config.REAL_IP
+def get_real_ip(use_cache: bool = True) -> str:
+    return config.REAL_IP
