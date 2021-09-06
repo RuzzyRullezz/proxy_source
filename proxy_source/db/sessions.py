@@ -11,8 +11,8 @@ from proxy_source import config
 async_engine = create_async_engine(
     str(config.DB_DSN_ASYNC),
     poolclass=NullPool,
-    echo=True,
-    echo_pool=True,
+    echo=False,
+    echo_pool=False,
 )
 
 
