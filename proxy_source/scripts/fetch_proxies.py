@@ -6,9 +6,6 @@ from proxy_source.utils.date_time import utc_now
 from proxy_source.core import sync_manager
 
 
-config.setup_logging()
-
-
 async def fetch():
     logger = logging.getLogger()
     start = utc_now()
@@ -29,4 +26,5 @@ def main():
 
 
 if __name__ == '__main__':
+    config.setup_logging()
     main()
