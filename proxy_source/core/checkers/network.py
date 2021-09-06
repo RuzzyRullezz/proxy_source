@@ -5,7 +5,6 @@ from typing import Optional, Callable, List, Awaitable
 
 import aiohttp
 import asyncio.exceptions
-from httpcore import ConnectTimeout
 from mypy_extensions import DefaultNamedArg
 from pydantic import BaseModel, ValidationError
 from starlette import status
@@ -77,7 +76,7 @@ async def get_proxy_ip(proxy: proxies.Proxy) -> str:
     for service in ip_services:
         try:
             return await service.get_ip(proxy=proxy)
-        except (aiohttp.ClientError, asyncio.exceptions.TimeoutError, ConnectTimeout, ConnectionResetError) as exc:
+        except (aiohttp.ClientError, asyncio.exceptions.TimeoutError, ConnectionResetError) as exc:
             last_exc = exc
     raise exceptions.IpServiceNetworkException() from last_exc
 

@@ -1,5 +1,5 @@
 from proxy_source.db.base import Base
-from proxy_source.vendors.rest_api.outgoing_request_log.models import OutgoingRequestBase
+from proxy_source.vendors.logs.outgoing_request_log.models import OutgoingRequestBase
 
 
 class TrackingOutgoingRequestIpService(OutgoingRequestBase, Base):  # type: ignore

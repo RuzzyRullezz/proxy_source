@@ -2,7 +2,6 @@ import logging.config
 import socket
 from typing import Dict, Optional, Any, List, Type
 
-from anyio import BrokenResourceError
 from raven import Client
 from raven.transport import RequestsHTTPTransport
 
@@ -10,7 +9,7 @@ from raven.transport import RequestsHTTPTransport
 class NonLoggableExceptionsFilter(logging.Filter):
     def filter(self, record):
         exception_types: List[Type[Exception]] = [
-            BrokenResourceError,
+
         ]
         if record.exc_info is None:
             return True

@@ -1,5 +1,5 @@
 from proxy_source.db.sessions import create_transaction_session
-from proxy_source.vendors.rest_api.outgoing_request_log.context import LogContextOutgoing
+from proxy_source.vendors.logs.outgoing_request_log.context import LogContextOutgoing
 
 from . import db_scheme
 
