@@ -4,7 +4,7 @@ from typing import Dict, Optional, Mapping, Any, Sequence
 
 from urllib.parse import urlunsplit, urlencode
 
-import httpx
+import aiohttp
 from pydantic import BaseModel
 
 
@@ -22,11 +22,6 @@ class Client:
         'Content-Type': 'application/json',
         'Content-Encoding': encoding,
     }
-
-    httpx_client: httpx.AsyncClient
-
-    def __init__(self, httpx_client: httpx.AsyncClient):
-        self.httpx_client = httpx_client
 
     def get_full_url(self, endpoint: str, query_params: Optional[Mapping[Any, Sequence[Any]]] = None) -> str:
         query: Optional[str] = None
@@ -48,15 +43,13 @@ class Client:
         body_data: Optional[Dict] = None
         if method == self.RequestMethodEnum.post and data is not None:
             body_data = self.get_body_data(data)
-        request: httpx.Request = httpx.Request(
+        async with aiohttp.request(
             method.value,
             url,
             data=body_data,
             headers=self.headers,
-        )
-        async with self.httpx_client as client:
-            response: httpx.Response = await client.send(request, timeout=self.timeout.total_seconds())
-        return response.content
+        ) as response:
+            return await response.read()
 
     async def send_get(self, endpoint: str, query_params: Optional[Mapping[Any, Sequence[Any]]] = None) -> bytes:
         full_url: str = self.get_full_url(endpoint, query_params=query_params)
