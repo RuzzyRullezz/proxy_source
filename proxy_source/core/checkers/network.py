@@ -14,7 +14,7 @@ from . import exceptions
 
 
 class IpAddressServiceClientFactoryProtocol(Protocol):
-    def __call__(self, proxies_list: Optional[str] = None) -> httpx.AsyncClient:
+    def __call__(self, proxies: Optional[str] = None) -> httpx.AsyncClient:
         pass
 
 
@@ -32,7 +32,7 @@ class IpAddressService(ABC):
         httpx_proxies: Optional[str] = None
         if proxy is not None:
             httpx_proxies = proxy.httpx_format
-        async with self.client_factory(proxies_list=httpx_proxies) as client:
+        async with self.client_factory(proxies=httpx_proxies) as client:
             response = await client.send(request, timeout=timeout.total_seconds(), allow_redirects=False)
         if response.status_code != status.HTTP_200_OK:
             raise exceptions.IpServiceNot200Exception(response.status_code)
