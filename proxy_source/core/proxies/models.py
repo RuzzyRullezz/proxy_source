@@ -44,3 +44,9 @@ class Proxy:
     def httpx_format(self) -> str:
         uri: str = str(self)
         return uri
+
+    @property
+    def aiohttp_format(self) -> str:
+        uri: str = str(self)
+        uri = uri.replace('https:', 'http:')
+        return uri
