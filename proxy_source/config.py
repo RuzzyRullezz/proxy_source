@@ -1,6 +1,6 @@
 import functools
 import pathlib
-from typing import List, Callable
+from typing import List, Callable, Optional
 
 from sqlalchemy.engine.url import URL
 from starlette.config import Config
@@ -71,6 +71,8 @@ setup_logging: Callable[[], None] = functools.partial(
     tg_chat=TG_CHAT,
     sentry_dsn=SENTRY_DSN,
 )
+
+REAL_IP: Optional[str] = config("PROXY_CHECK_MAX_WORKERS", cast=int, default=None)
 
 PROXY_CHECK_MAX_WORKERS: int = config("PROXY_CHECK_MAX_WORKERS", cast=int, default=50)
 
