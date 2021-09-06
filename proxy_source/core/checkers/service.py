@@ -32,10 +32,11 @@ async def check_proxy(proxy: Proxy) -> Report:
     except exceptions.IpServiceException as exc:
         elapsed_time_seconds = (utc_now() - start).total_seconds()
         exception = exc.__cause__
-    return Report(
+    report = Report(
         proxy=proxy,
         is_alive=is_alive,
         is_anon=is_anon,
         elapsed_time_seconds=elapsed_time_seconds,
         exception=exception,
     )
+    return report

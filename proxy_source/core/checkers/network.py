@@ -18,7 +18,7 @@ from . import exceptions
 
 class IpAddressService(ABC):
     async def get_ip(self, proxy: Optional[proxies.Proxy] = None) -> str:
-        timeout: datetime.timedelta = datetime.timedelta(seconds=3)
+        timeout: datetime.timedelta = datetime.timedelta(seconds=10)
         url: str = self.get_url(proxy=proxy)
         aiohttp_proxy: Optional[str] = None
         if proxy is not None:
