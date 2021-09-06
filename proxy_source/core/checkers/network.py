@@ -9,8 +9,12 @@ from mypy_extensions import DefaultNamedArg
 from pydantic import BaseModel, ValidationError
 from starlette import status
 
+from proxy_source import config
+from proxy_source.vendors.rest_api.outgoing_request_log.httpx.client import AsyncTraceClient
+
 from .. import proxies
 from . import exceptions
+from . import logs
 
 
 class IpAddressServiceClientFactoryProtocol(Protocol):
@@ -18,13 +22,19 @@ class IpAddressServiceClientFactoryProtocol(Protocol):
         pass
 
 
+class AsyncClientFactory(IpAddressServiceClientFactoryProtocol):
+    def __call__(self, proxies: Optional[str] = None) -> httpx.AsyncClient:
+        if config.ENABLE_OUTGOING_REQUEST_LOG:
+            return AsyncTraceClient(logs.create_outgoing_request_log, proxies=proxies)
+        else:
+            return httpx.AsyncClient(proxies=proxies)
+
+
 class IpAddressService(ABC):
     client_factory: IpAddressServiceClientFactoryProtocol
 
-    def __init__(self, client_factory: Optional[IpAddressServiceClientFactoryProtocol] = None):
-        if client_factory is None:
-            client_factory = httpx.AsyncClient.__call__
-        self.client_factory = client_factory
+    def __init__(self):
+        self.client_factory = AsyncClientFactory()
 
     async def get_ip(self, proxy: Optional[proxies.Proxy] = None) -> str:
         timeout: datetime.timedelta = datetime.timedelta(seconds=3)
@@ -111,7 +121,7 @@ def get_real_ip_func() -> GetRealIpFuncType:
     lock = asyncio.Lock()
 
     async def _get_real_ip() -> str:
-        return await IpifyService().get_ip(proxy=None)
+        return config.REAL_IP or await IpifyService().get_ip(proxy=None)
 
     async def _get_real_ip_wrapper(use_cache: bool = True) -> str:
         nonlocal ip_cached

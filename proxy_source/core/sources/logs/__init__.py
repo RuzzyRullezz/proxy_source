@@ -1,5 +1,5 @@
-from . import store
+from .store import create_outgoing_request_log
 
 __all__ = [
-    'store',
+    'create_outgoing_request_log',
 ]

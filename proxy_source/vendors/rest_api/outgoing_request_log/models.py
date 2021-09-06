@@ -65,7 +65,7 @@ class OutgoingRequestBase:
         obj.response_datetime = response_datetime
         obj.response_status_code = response_status_code
         obj.response_headers = response_headers
-        obj.request_body = response_body
+        obj.response_body = response_body
         obj.elapsed_time = elapsed_time
         obj.exception = exception
         return obj

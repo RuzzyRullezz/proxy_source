@@ -4,8 +4,10 @@ import httpx
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
+from proxy_source.vendors.rest_api.outgoing_request_log.httpx.client import AsyncTraceClient
 
 from .. import proxies
+from . import logs
 from . import base
 from . import bestproxies
 
@@ -23,8 +25,10 @@ class BestProxiesSource(base.ProxySource):
 
     @staticmethod
     def create_repo_client() -> bestproxies.client.Client:
-        client = bestproxies.client.Client(httpx.AsyncClient())
-        return client
+        httpx_client: httpx.AsyncClient = AsyncTraceClient(
+            logs.create_outgoing_request_log
+        ) if config.ENABLE_OUTGOING_REQUEST_LOG else httpx.AsyncClient()
+        return bestproxies.client.Client(httpx_client)
 
     def create_proxies_repository(self) -> bestproxies.repository.DataRepository:
         client = self.create_repo_client()
