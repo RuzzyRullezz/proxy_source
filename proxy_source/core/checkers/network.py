@@ -9,8 +9,6 @@ from mypy_extensions import DefaultNamedArg
 from pydantic import BaseModel, ValidationError
 from starlette import status
 
-from proxy_source import config
-
 from .. import proxies
 from . import exceptions
 
@@ -127,5 +125,4 @@ def get_real_ip_func() -> GetRealIpFuncType:
     return _get_real_ip_wrapper
 
 
-def get_real_ip(use_cache: bool = True) -> str:
-    return config.REAL_IP
+get_real_ip: GetRealIpFuncType = get_real_ip_func()
