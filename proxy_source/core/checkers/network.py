@@ -1,7 +1,7 @@
 import asyncio
 import datetime
 from abc import abstractmethod, ABC
-from typing import Optional, Callable, List, Awaitable, Protocol
+from typing import Optional, Callable, List, Awaitable, Protocol, cast
 
 import httpx
 from httpcore import ConnectTimeout
@@ -10,6 +10,7 @@ from pydantic import BaseModel, ValidationError
 from starlette import status
 
 from proxy_source import config
+from proxy_source.vendors.rest_api.outgoing_request_log.context import AsyncOutgoingLogSaverProtocol
 from proxy_source.vendors.rest_api.outgoing_request_log.httpx.client import AsyncTraceClient
 
 from .. import proxies
@@ -25,7 +26,10 @@ class IpAddressServiceClientFactoryProtocol(Protocol):
 class AsyncClientFactory(IpAddressServiceClientFactoryProtocol):
     def __call__(self, proxies: Optional[str] = None) -> httpx.AsyncClient:
         if config.ENABLE_OUTGOING_REQUEST_LOG:
-            return AsyncTraceClient(logs.create_outgoing_request_log, proxies=proxies)
+            return AsyncTraceClient(
+                cast(AsyncOutgoingLogSaverProtocol, logs.create_outgoing_request_log),
+                proxies=proxies
+            )
         else:
             return httpx.AsyncClient(proxies=proxies)
 

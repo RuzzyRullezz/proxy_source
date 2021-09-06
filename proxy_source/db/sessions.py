@@ -1,3 +1,7 @@
+import asyncio
+import contextlib
+from typing import AsyncGenerator
+
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
@@ -12,8 +16,12 @@ async_engine = create_async_engine(
 )
 
 
-def get_async_db_session() -> AsyncSession:
-    session_factory = sessionmaker(async_engine, class_=AsyncSession)
-    session = session_factory()
-    return session
+session_factory = sessionmaker(async_engine, class_=AsyncSession)
+session = session_factory()
+lock = asyncio.Lock()
 
+
+@contextlib.asynccontextmanager
+async def create_transaction_session() -> AsyncGenerator[AsyncSession, None]:
+    async with lock, session, session.begin():
+        yield session

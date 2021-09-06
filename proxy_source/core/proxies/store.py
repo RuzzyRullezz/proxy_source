@@ -2,7 +2,7 @@ from typing import List
 
 import sqlalchemy as sa
 
-from proxy_source.db.sessions import get_async_db_session
+from proxy_source.db.sessions import create_transaction_session
 
 from . import models
 from . import db_scheme
@@ -37,7 +37,7 @@ def proxy_from_proxy_db(proxy_db: db_scheme.ProxyDb) -> models.Proxy:
 
 async def save_proxies(*proxies_list: models.Proxy):
     proxies_db_list: List[db_scheme.ProxyDb] = list(map(proxy_db_from_proxy, proxies_list))
-    async with get_async_db_session() as db_session, db_session.begin():
+    async with create_transaction_session() as db_session:
         db_session.add_all(proxies_db_list)
 
 
@@ -45,6 +45,6 @@ async def get_active_proxies() -> List[models.Proxy]:
     select_stmt = sa.select(db_scheme.ProxyDb).where(
         db_scheme.ProxyDb.deleted_at.is_(None),
     )
-    async with get_async_db_session() as db_session, db_session.begin():
+    async with create_transaction_session() as db_session:
         proxies_db_list = (await db_session.execute(select_stmt)).scalars().all()
         return list(map(proxy_from_proxy_db, proxies_db_list))
