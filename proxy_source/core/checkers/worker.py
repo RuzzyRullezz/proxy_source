@@ -1,18 +1,18 @@
 import asyncio
-from typing import List, Callable, Awaitable, Union, cast, Generator
+from typing import List, Callable, Awaitable, Union, cast, AsyncGenerator, Literal
 
-from ..proxies import Proxy
-from .service import check_proxy, Report
+from .. import proxies
+from . import service
 
 
 StopUnit = None
-InQueueElementType = Union[Proxy, StopUnit]
-OutQueueElementType = Union[Proxy, Exception, StopUnit]
+InQueueElementType = Union[proxies.Proxy, Literal[StopUnit]]  # type: ignore
+OutQueueElementType = Union[service.Report, Exception, Literal[StopUnit]]  # type: ignore
 
 
 async def proxy_check_worker(
-        in_queue: asyncio.Queue[InQueueElementType],
-        out_queue: asyncio.Queue[OutQueueElementType],
+        in_queue: asyncio.Queue[InQueueElementType],  # type: ignore
+        out_queue: asyncio.Queue[OutQueueElementType],  # type: ignore
 ):
     while True:
         element: InQueueElementType = await in_queue.get()
@@ -20,15 +20,15 @@ async def proxy_check_worker(
             if element is StopUnit:
                 break
             proxy = element
-            report = await check_proxy(proxy)
+            report = await service.check_proxy(proxy)
             await out_queue.put(cast(OutQueueElementType, report))
         finally:
             in_queue.task_done()
 
 
 async def report_read_worker(
-        queue: asyncio.Queue[OutQueueElementType],
-) -> Generator[Report, None, None]:
+        queue: asyncio.Queue[OutQueueElementType],  # type: ignore
+) -> AsyncGenerator[service.Report, None]:
     while True:
         element: OutQueueElementType = await queue.get()
         if element is StopUnit:
@@ -78,7 +78,7 @@ class Master:
         self.workers = self.create_workers(self.in_queue, self.out_queue, max_workers, proxy_check_worker)
         self.finish_notify_task = asyncio.create_task(self.finish_notify(self.workers, self.out_queue))
 
-    async def run(self, proxies_list: List[Proxy]) -> Generator[Report, None, None]:
+    async def run(self, proxies_list: List[proxies.Proxy]) -> AsyncGenerator[service.Report, None]:
         for proxy in proxies_list:
             await self.in_queue.put(proxy)
         for _ in self.workers:
@@ -89,9 +89,9 @@ class Master:
 
 
 async def get_proxy_reports_gen(
-        proxies_list: List[Proxy],
+        proxies_list: List[proxies.Proxy],
         parallels_cnt: int,
-) -> Generator[Report, None, None]:
+) -> AsyncGenerator[service.Report, None]:
     # yield from ... doesn't work in coroutines
     async for report in Master(parallels_cnt).run(proxies_list):
         yield report

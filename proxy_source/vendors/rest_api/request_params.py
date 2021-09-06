@@ -1,4 +1,4 @@
-from typing import Optional, Callable
+from typing import Optional, Callable, cast
 
 from fastapi import Request
 
@@ -13,4 +13,4 @@ def get_ip_address(header_key: str = "X-Real-IP") -> Callable[[Request], Optiona
 
 
 def get_user_agent(request: Request) -> Optional[str]:
-    return request.headers.get('user-agent', None)
+    return cast(Optional[str], request.headers.get('user-agent', None))

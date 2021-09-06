@@ -9,4 +9,4 @@ class CantParseBestProxiesResponseException(BestProxiesException):
         self.content = content
 
     def __str__(self) -> str:
-        return f'Can\'t parse content:\n{self.content}'
+        return '{!r}'.format(b'Can\'t parse content:\n{self.content}')

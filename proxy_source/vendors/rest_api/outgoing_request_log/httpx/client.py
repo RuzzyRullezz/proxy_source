@@ -1,9 +1,10 @@
 import datetime
 import traceback
+from typing import cast
 
 from httpx import Client, Response, Request, AsyncClient
 
-from ..context import LogContextOutgoing, OutgoingLogSaver, AsyncOutgoingLogSaver
+from ..context import LogContextOutgoing, OutgoingLogSaverProtocol, AsyncOutgoingLogSaverProtocol
 
 
 def utc_now():
@@ -30,7 +31,7 @@ class ContextMixin:
         context.response_headers = {name.decode(self.encoding): value.decode(self.encoding)
                                     for name, value in response.headers.raw}
         context.response_body = response.content
-        context.elapsed_time = context.response_datetime - context.request_datetime
+        context.elapsed_time = cast(datetime.datetime, context.response_datetime) - context.request_datetime
 
     @staticmethod
     def set_exception_context(context: LogContextOutgoing, exception_log: str):
@@ -38,9 +39,9 @@ class ContextMixin:
 
 
 class TraceClient(Client, ContextMixin):
-    log_save: OutgoingLogSaver
+    log_save: OutgoingLogSaverProtocol
 
-    def __init__(self, log_save: OutgoingLogSaver, *args, **kwargs):
+    def __init__(self, log_save: OutgoingLogSaverProtocol, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.log_save = log_save
 
@@ -58,9 +59,9 @@ class TraceClient(Client, ContextMixin):
 
 
 class AsyncTraceClient(AsyncClient, ContextMixin):
-    log_save: AsyncOutgoingLogSaver
+    log_save: AsyncOutgoingLogSaverProtocol
 
-    def __init__(self, log_save: AsyncOutgoingLogSaver, *args, **kwargs):
+    def __init__(self, log_save: AsyncOutgoingLogSaverProtocol, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.log_save = log_save
 

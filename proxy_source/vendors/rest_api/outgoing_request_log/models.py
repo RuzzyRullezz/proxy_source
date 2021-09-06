@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import datetime
+from typing import Dict, Optional
+
 from sqlalchemy import Column, BigInteger, DateTime, Unicode, JSON, LargeBinary, Integer, Interval
 
 from .context import LogContextOutgoing
@@ -24,7 +27,7 @@ class OutgoingRequestBase:
 
     @classmethod
     def from_log_context(cls, log_context: LogContextOutgoing) -> OutgoingRequestBase:
-        return cls(
+        return cls.create(
             request_datetime=log_context.request_datetime,
             request_url=log_context.request_url,
             request_method=log_context.request_method,
@@ -37,3 +40,32 @@ class OutgoingRequestBase:
             elapsed_time=log_context.elapsed_time,
             exception=log_context.exception,
         )
+
+    @classmethod
+    def create(
+            cls,
+            request_datetime: datetime.datetime,
+            request_url: str,
+            request_method: str,
+            request_headers: Optional[Dict[str, str]],
+            request_body: bytes,
+            response_datetime: Optional[datetime.datetime],
+            response_status_code: Optional[int],
+            response_headers: Optional[Dict[str, str]],
+            response_body: Optional[bytes],
+            elapsed_time: Optional[datetime.timedelta],
+            exception: Optional[str],
+    ) -> OutgoingRequestBase:
+        obj = cls()
+        obj.request_datetime = request_datetime
+        obj.request_url = request_url
+        obj.request_method = request_method
+        obj.request_headers = request_headers
+        obj.request_body = request_body
+        obj.response_datetime = response_datetime
+        obj.response_status_code = response_status_code
+        obj.response_headers = response_headers
+        obj.request_body = response_body
+        obj.elapsed_time = elapsed_time
+        obj.exception = exception
+        return obj

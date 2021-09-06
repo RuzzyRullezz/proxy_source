@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from typing import Dict, Optional
+from typing import Dict, Optional, Mapping, Any, Sequence
 
 from urllib.parse import urlunsplit, urlencode
 
@@ -28,8 +28,10 @@ class Client:
     def __init__(self, httpx_client: httpx.AsyncClient):
         self.httpx_client = httpx_client
 
-    def get_full_url(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> str:
-        query: str = urlencode(query_params)
+    def get_full_url(self, endpoint: str, query_params: Optional[Mapping[Any, Sequence[Any]]] = None) -> str:
+        query: Optional[str] = None
+        if query_params is not None:
+            query = urlencode(query_params)
         return urlunsplit((self.scheme, self.netloc, endpoint, query, None))
 
     @staticmethod
@@ -43,13 +45,9 @@ class Client:
             method: RequestMethodEnum,
             data: Optional[BaseModel] = None,
     ) -> bytes:
-        body_data: Optional[Dict]
-        if method == self.RequestMethodEnum.get:
-            body_data = None
-        elif method == self.RequestMethodEnum.post:
+        body_data: Optional[Dict] = None
+        if method == self.RequestMethodEnum.post and data is not None:
             body_data = self.get_body_data(data)
-        else:
-            raise NotImplementedError(f"Unsupported request method = {method}")
         request: httpx.Request = httpx.Request(
             method.value,
             url,
@@ -60,7 +58,7 @@ class Client:
             response: httpx.Response = await client.send(request, timeout=self.timeout.total_seconds())
         return response.content
 
-    async def send_get(self, endpoint: str, query_params: Optional[Dict[str, str]] = None) -> bytes:
+    async def send_get(self, endpoint: str, query_params: Optional[Mapping[Any, Sequence[Any]]] = None) -> bytes:
         full_url: str = self.get_full_url(endpoint, query_params=query_params)
         return await self.send_request(full_url, self.RequestMethodEnum.get)
 

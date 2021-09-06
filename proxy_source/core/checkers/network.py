@@ -1,7 +1,7 @@
 import asyncio
 import datetime
 from abc import abstractmethod, ABC
-from typing import Optional, Callable, List, Awaitable
+from typing import Optional, Callable, List, Awaitable, Protocol
 
 import httpx
 from httpcore import ConnectTimeout
@@ -13,15 +13,17 @@ from .. import proxies
 from . import exceptions
 
 
-IpAddressServiceClientFactoryType = Callable[[DefaultNamedArg(Optional[str], name='proxies')], httpx.Client]  # noqa: F821, E501
+class IpAddressServiceClientFactoryProtocol(Protocol):
+    def __call__(self, proxies_list: Optional[str] = None) -> httpx.AsyncClient:
+        pass
 
 
 class IpAddressService(ABC):
-    client_factory: IpAddressServiceClientFactoryType
+    client_factory: IpAddressServiceClientFactoryProtocol
 
-    def __init__(self, client_factory: Optional[IpAddressServiceClientFactoryType] = None):
+    def __init__(self, client_factory: Optional[IpAddressServiceClientFactoryProtocol] = None):
         if client_factory is None:
-            client_factory = httpx.AsyncClient
+            client_factory = httpx.AsyncClient.__call__
         self.client_factory = client_factory
 
     async def get_ip(self, proxy: Optional[proxies.Proxy] = None) -> str:
@@ -30,7 +32,7 @@ class IpAddressService(ABC):
         httpx_proxies: Optional[str] = None
         if proxy is not None:
             httpx_proxies = proxy.httpx_format
-        async with self.client_factory(proxies=httpx_proxies) as client:
+        async with self.client_factory(proxies_list=httpx_proxies) as client:
             response = await client.send(request, timeout=timeout.total_seconds(), allow_redirects=False)
         if response.status_code != status.HTTP_200_OK:
             raise exceptions.IpServiceNot200Exception(response.status_code)

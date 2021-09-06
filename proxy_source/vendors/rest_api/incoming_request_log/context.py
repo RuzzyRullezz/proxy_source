@@ -2,20 +2,20 @@ from __future__ import annotations
 
 import copy
 import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, cast
 
 from fastapi import Request, Response
 from starlette import status
 
 
 class LogContextIncoming:
-    request_datetime: datetime
+    request_datetime: datetime.datetime
     request_url: str
     request_method: str
     request_headers: Dict[str, str]
     request_body: bytes
 
-    response_datetime: datetime
+    response_datetime: datetime.datetime
     response_status_code: int
     response_headers: Optional[Dict[str, str]]
     response_body: Optional[bytes]
@@ -41,7 +41,7 @@ class LogContextIncoming:
 
         resp_body = [section async for section in response.__dict__['body_iterator']]
         response.__setattr__('body_iterator', async_iterator_wrapper(resp_body))
-        return resp_body[0]
+        return cast(bytes, resp_body[0])
 
     @staticmethod
     async def create(
@@ -58,7 +58,7 @@ class LogContextIncoming:
         log_context.request_headers = {}
         for k, v in request.headers.items():
             log_context.request_headers[k] = v
-        log_context.request_body = await request.stream_full() if hasattr(request, 'stream_full') else None
+        log_context.request_body = await getattr(request, 'stream_full')() if hasattr(request, 'stream_full') else None
         log_context.response_datetime = response_datetime
         log_context.elapsed_time = response_datetime - request_datetime
         if response is not None:

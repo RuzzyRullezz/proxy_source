@@ -8,7 +8,7 @@ import sqlalchemy.dialects.postgresql as sa_pg
 from . import models
 
 
-class ProxyDb(Base):
+class ProxyDb(Base):  # type: ignore
     __tablename__ = 'proxy'
     __table_args__ = (
         UniqueConstraint('ip', 'port', name='ip_port_unique'),

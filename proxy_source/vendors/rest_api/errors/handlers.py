@@ -19,8 +19,8 @@ def request_validation_exception_handler(request: Request, exc: RequestValidatio
     request_validation_error_code = "request_validation_error"
     errors = []
     for error in exc.raw_errors:
-        if hasattr(error.exc, 'raw_errors'):
-            first_error = error.exc.raw_errors[0]
+        if hasattr(error.exc, 'raw_errors'):  # type: ignore
+            first_error = error.exc.raw_errors[0]  # type: ignore
             message = str(first_error.exc)
             field = first_error._loc
         else:

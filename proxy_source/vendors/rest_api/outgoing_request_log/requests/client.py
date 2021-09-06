@@ -1,9 +1,10 @@
 import datetime
 import traceback
+from typing import cast
 
 from requests import PreparedRequest, Response, Session
 
-from ..context import LogContextOutgoing, OutgoingLogSaver
+from ..context import LogContextOutgoing, OutgoingLogSaverProtocol
 
 
 def utc_now():
@@ -12,9 +13,9 @@ def utc_now():
 
 class SessionLoggable(Session):
     encoding = 'utf-8'
-    log_save: OutgoingLogSaver
+    log_save: OutgoingLogSaverProtocol
 
-    def __init__(self, log_save: OutgoingLogSaver):
+    def __init__(self, log_save: OutgoingLogSaverProtocol):
         super().__init__()
         self.log_save = log_save
 
@@ -35,7 +36,7 @@ class SessionLoggable(Session):
         context.response_status_code = response.status_code
         context.response_headers = dict(response.headers)
         context.response_body = response.content
-        context.elapsed_time = context.response_datetime - context.request_datetime
+        context.elapsed_time = cast(datetime.datetime, context.response_datetime) - context.request_datetime
 
     @staticmethod
     def set_exception_context(context: LogContextOutgoing, exception_log: str):
