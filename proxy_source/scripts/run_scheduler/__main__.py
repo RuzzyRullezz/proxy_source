@@ -7,7 +7,7 @@ from apscheduler.triggers.cron import CronTrigger
 from pytz import utc
 
 from proxy_source import config
-from proxy_source.scripts import fetch_proxies
+from proxy_source.scripts import fetch_proxies, filter_proxies
 
 
 def get_scheduler() -> BaseScheduler:
@@ -26,6 +26,12 @@ def add_jobs(scheduler: BaseScheduler):
         fetch_proxies.fetch,
         trigger=CronTrigger.from_crontab("* * * * *"),
         id=fetch_proxies.fetch.__name__,
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        filter_proxies.filter_proxies,
+        trigger=CronTrigger.from_crontab("* * * * *"),
+        id=filter_proxies.filter_proxies.__name__,
         replace_existing=True,
     )
 
