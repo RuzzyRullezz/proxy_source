@@ -16,7 +16,7 @@ def get_scheduler() -> BaseScheduler:
     }
     job_defaults = {
         'coalesce': False,
-        'max_instances': 1
+        'max_instances': 2
     }
     return AsyncIOScheduler(jobstores=jobstores, job_defaults=job_defaults, timezone=utc)
 
