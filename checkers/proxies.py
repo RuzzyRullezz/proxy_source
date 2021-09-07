@@ -1,12 +1,12 @@
 import asyncio
 
 from proxy_source.utils.date_time import utc_now
-from proxy_source.core import sync_manager
+from proxy_source.core import proxy_manager
 
 
 async def main():
     start = utc_now()
-    await sync_manager.get_and_save_proxies()
+    await proxy_manager.get_and_save_proxies()
     end = utc_now()
     elapsed_time = end - start
     print(elapsed_time.total_seconds())

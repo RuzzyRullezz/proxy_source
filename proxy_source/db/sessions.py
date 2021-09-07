@@ -16,12 +16,11 @@ async_engine = create_async_engine(
 )
 
 
-session_factory = sessionmaker(async_engine, class_=AsyncSession)
-session = session_factory()
+Session = sessionmaker(async_engine, class_=AsyncSession)
 lock = asyncio.Lock()
 
 
 @contextlib.asynccontextmanager
 async def create_transaction_session() -> AsyncGenerator[AsyncSession, None]:
-    async with lock, session, session.begin():
+    async with lock, Session() as session, session.begin():
         yield session

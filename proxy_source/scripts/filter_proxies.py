@@ -6,22 +6,23 @@ from proxy_source.utils.date_time import utc_now
 from proxy_source.core import proxy_manager
 
 
-async def fetch():
+async def filter_proxies():
     logger = logging.getLogger()
     start = utc_now()
-    new_proxies_cnt = await proxy_manager.get_and_save_proxies()
+    active_proxies_cnt, filtered_proxies_cnt = await proxy_manager.check_saved_proxies()
     end = utc_now()
     elapsed_time_seconds = int((end - start).total_seconds())
     logger.info(f'Start time: {start}'
                 f'\nEnd time: {end}'
                 f'\nElapsed time: {elapsed_time_seconds} seconds'
-                f'\nNew proxies count: {new_proxies_cnt}.')
+                f'\nActive proxies count: {active_proxies_cnt}'
+                f'\nFiltered proxies count: {filtered_proxies_cnt}.')
 
 
 def main():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(
-        fetch()
+        filter_proxies()
     )
 
 
