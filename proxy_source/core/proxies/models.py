@@ -1,4 +1,5 @@
 import datetime
+import ipaddress
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Dict, Literal
@@ -15,7 +16,7 @@ class Proxy:
         best_proxies = 'best_proxies'
 
     protocol: ProtocolEnum = field(hash=False, compare=False)
-    ip: str = field(hash=True, compare=True)
+    ip: ipaddress.IPv4Address = field(hash=True, compare=True)
     port: int = field(hash=True, compare=True)
     user: Optional[str] = field(hash=False, compare=False)
     password: Optional[str] = field(hash=False, compare=False)

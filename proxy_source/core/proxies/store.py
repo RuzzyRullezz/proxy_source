@@ -28,7 +28,7 @@ def proxy_from_proxy_db(proxy_db: db_scheme.ProxyDb) -> models.Proxy:
     proxy: models.Proxy = models.Proxy(
         created_at=proxy_db.created_at,
         protocol=proxy_db.protocol,
-        ip=str(proxy_db.ip),
+        ip=proxy_db.ip,
         port=proxy_db.port,
         user=proxy_db.user,
         password=proxy_db.password,

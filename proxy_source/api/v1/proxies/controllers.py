@@ -1,4 +1,3 @@
-import ipaddress
 from typing import List
 
 from fastapi import APIRouter
@@ -13,7 +12,7 @@ router = APIRouter(tags=["proxies"])
 def proxy_to_dto(proxy: proxy_manager.proxies.Proxy) -> dto.ProxyDTO:
     return dto.ProxyDTO(
         protocol=proxy.protocol,
-        ip=ipaddress.ip_address(proxy.ip),
+        ip=proxy.ip,
         port=proxy.port,
         user=proxy.user,
         password=proxy.password,

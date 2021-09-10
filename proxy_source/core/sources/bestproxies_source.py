@@ -1,3 +1,4 @@
+import ipaddress
 from typing import List
 
 from proxy_source import config
@@ -41,7 +42,7 @@ class BestProxiesSource(base.ProxySource):
             raise NotImplementedError("Unsupported proxy protocol.")
         return proxies.Proxy(
             protocol=schema,
-            ip=dto_proxy.ip,
+            ip=ipaddress.ip_address(dto_proxy.ip),
             port=dto_proxy.port,
             user=None,
             password=None,
