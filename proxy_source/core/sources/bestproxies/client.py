@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from typing import Dict, Optional, Mapping, Any, Sequence
+from typing import Dict, Optional
 
 from urllib.parse import urlunsplit, urlencode
 
@@ -23,7 +23,7 @@ class Client:
         'Content-Encoding': encoding,
     }
 
-    def get_full_url(self, endpoint: str, query_params: Optional[Mapping[Any, Sequence[Any]]] = None) -> str:
+    def get_full_url(self, endpoint: str, query_params: Optional[Dict] = None) -> str:
         query: Optional[str] = None
         if query_params is not None:
             query = urlencode(query_params)
@@ -51,7 +51,7 @@ class Client:
         ) as response:
             return await response.read()
 
-    async def send_get(self, endpoint: str, query_params: Optional[Mapping[Any, Sequence[Any]]] = None) -> bytes:
+    async def send_get(self, endpoint: str, query_params: Optional[Dict] = None) -> bytes:
         full_url: str = self.get_full_url(endpoint, query_params=query_params)
         return await self.send_request(full_url, self.RequestMethodEnum.get)
 

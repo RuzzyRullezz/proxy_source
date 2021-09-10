@@ -1,4 +1,4 @@
-from typing import TypeVar, Type, List, cast, Mapping, Any, Sequence
+from typing import TypeVar, Type, List
 
 from pydantic import BaseModel, ValidationError
 
@@ -27,16 +27,13 @@ class DataRepository:
 
     async def get_proxy_list(self) -> List[dto.Proxy]:
         endpoint = 'proxylist.json'
-        query_params = cast(
-            Mapping[Any, Sequence[Any]],
-            dict(
-                key=self.api_key,
-                type='http,https',
-                response=1000,
-                speed=1,
-                level=1,
-                limit=0,
-            )
+        query_params = dict(
+            key=self.api_key,
+            type='http,https',
+            response=1000,
+            speed=1,
+            level=1,
+            limit=0,
         )
         response = await self.client.send_get(endpoint, query_params=query_params)
         dto_proxies_list: dto.ProxiesList = self.parse(dto.ProxiesList, response)
