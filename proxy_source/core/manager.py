@@ -19,7 +19,6 @@ async def fetch_and_save_proxies() -> int:
 
 
 async def filter_proxies(interval: datetime.timedelta = proxy_interval) -> int:
-    await storage.mark_all_as_inactive()
     end = utc_now()
     begin = end - interval
     get_proxy_list_query = storage.GetListQuery(
@@ -30,6 +29,7 @@ async def filter_proxies(interval: datetime.timedelta = proxy_interval) -> int:
     active_proxy_list = await checkers.filter_alive_anon_proxies(proxy_list)
     for proxy in active_proxy_list:
         proxy.is_active = True
+    await storage.mark_all_as_inactive()
     await storage.update_list(active_proxy_list)
     return len(active_proxy_list)
 
