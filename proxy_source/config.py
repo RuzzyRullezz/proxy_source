@@ -72,11 +72,9 @@ setup_logging: Callable[[], None] = functools.partial(
     sentry_dsn=SENTRY_DSN,
 )
 
-ENABLE_OUTGOING_REQUEST_LOG = config("ENABLE_OUTGOING_REQUEST_LOG", cast=bool, default=False)
-
 REAL_IP: Optional[str] = config("REAL_IP", cast=str, default=None)
 
-PROXY_CHECK_MAX_WORKERS: int = config("PROXY_CHECK_MAX_WORKERS", cast=int, default=50)
+PROXY_CHECK_MAX_WORKERS: int = config("PROXY_CHECK_MAX_WORKERS", cast=int, default=300)
 
 # Proxy Sources
 # https://best-proxies.ru/

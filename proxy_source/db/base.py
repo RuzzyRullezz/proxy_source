@@ -14,9 +14,7 @@ class ModelBase:
 
     @classmethod
     def discover(cls):
-        from proxy_source.core.sources.logs import db_scheme  # noqa: F401, F811
-        from proxy_source.core.checkers.logs import db_scheme  # noqa: F401, F811
-        from proxy_source.core.proxies import db_scheme  # noqa: F401, F811
+        from proxy_source.core.storage import db_scheme  # noqa: F401, F811
 
 
 meta = MetaData(naming_convention={

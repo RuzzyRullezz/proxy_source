@@ -3,20 +3,19 @@ import logging
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
-from proxy_source.core import proxy_manager
+from proxy_source.core import manager
 
 
 async def filter_proxies():
     logger = logging.getLogger()
     start = utc_now()
-    active_proxies_cnt, filtered_proxies_cnt = await proxy_manager.check_saved_proxies()
+    active_proxies_cnt = await manager.filter_proxies()
     end = utc_now()
     elapsed_time_seconds = int((end - start).total_seconds())
     logger.info(f'Start time: {start}'
                 f'\nEnd time: {end}'
                 f'\nElapsed time: {elapsed_time_seconds} seconds'
-                f'\nActive proxies count: {active_proxies_cnt}'
-                f'\nFiltered proxies count: {filtered_proxies_cnt}.')
+                f'\nActive proxies count: {active_proxies_cnt}.')
 
 
 def main():

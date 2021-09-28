@@ -48,4 +48,5 @@ class BestProxiesSource(base.ProxySource):
             password=None,
             source=self.type,
             created_at=utc_now(),
+            is_active=False,
         )

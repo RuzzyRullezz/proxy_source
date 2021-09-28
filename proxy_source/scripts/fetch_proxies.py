@@ -3,13 +3,13 @@ import logging
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
-from proxy_source.core import proxy_manager
+from proxy_source.core import manager
 
 
 async def fetch():
     logger = logging.getLogger()
     start = utc_now()
-    new_proxies_cnt = await proxy_manager.get_and_save_proxies()
+    new_proxies_cnt = await manager.fetch_and_save_proxies()
     end = utc_now()
     elapsed_time_seconds = int((end - start).total_seconds())
     logger.info(f'Start time: {start}'

@@ -1,11 +1,11 @@
+import dataclasses
 import datetime
 import ipaddress
-from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Dict, Literal
 
 
-@dataclass(frozen=True)
+@dataclasses.dataclass
 class Proxy:
 
     class ProtocolEnum(str, Enum):
@@ -15,13 +15,14 @@ class Proxy:
     class SourceEnum(str, Enum):
         best_proxies = 'best_proxies'
 
-    protocol: ProtocolEnum = field(hash=False, compare=False)
-    ip: ipaddress.IPv4Address = field(hash=True, compare=True)
-    port: int = field(hash=True, compare=True)
-    user: Optional[str] = field(hash=False, compare=False)
-    password: Optional[str] = field(hash=False, compare=False)
-    source: SourceEnum = field(hash=False, compare=False)
-    created_at: datetime.datetime = field(hash=False, compare=False)
+    protocol: ProtocolEnum = dataclasses.field(hash=False, compare=False)
+    ip: ipaddress.IPv4Address = dataclasses.field(hash=True, compare=True)
+    port: int = dataclasses.field(hash=True, compare=True)
+    user: Optional[str] = dataclasses.field(hash=False, compare=False)
+    password: Optional[str] = dataclasses.field(hash=False, compare=False)
+    source: SourceEnum = dataclasses.field(hash=False, compare=False)
+    created_at: datetime.datetime = dataclasses.field(hash=False, compare=False)
+    is_active: bool = dataclasses.field(hash=False, compare=False)
 
     def __str__(self) -> str:
         scheme: str = f'{self.protocol}'
