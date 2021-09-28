@@ -39,5 +39,5 @@ async def get_active_proxy_list() -> typing.List[proxies.Proxy]:
         is_active=True,
     )
     proxy_list = await storage.get_list(get_proxy_list_query)
-    sorted(pr)
+    proxy_list = sorted(proxy_list, key=lambda proxy: proxy.created_at, reverse=True)
     return proxy_list
