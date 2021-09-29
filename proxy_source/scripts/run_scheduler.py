@@ -24,13 +24,13 @@ def get_scheduler() -> BaseScheduler:
 def add_jobs(scheduler: BaseScheduler):
     scheduler.add_job(
         fetch_proxies.fetch,
-        trigger=CronTrigger.from_crontab("*/5 * * * *"),
+        trigger=CronTrigger.from_crontab("*/10 * * * *"),
         id=fetch_proxies.fetch.__name__,
         replace_existing=True,
     )
     scheduler.add_job(
         filter_proxies.filter_proxies,
-        trigger=CronTrigger.from_crontab("* * * * *"),
+        trigger=CronTrigger.from_crontab("*/5 * * * *"),
         id=filter_proxies.filter_proxies.__name__,
         replace_existing=True,
     )
