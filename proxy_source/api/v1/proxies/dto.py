@@ -1,3 +1,4 @@
+import datetime
 import ipaddress
 from typing import Optional
 
@@ -12,3 +13,4 @@ class ProxyDTO(BaseModel):
     port: int
     user: Optional[str]
     password: Optional[str]
+    created_at: datetime.datetime

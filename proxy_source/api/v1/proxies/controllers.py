@@ -6,6 +6,7 @@ from proxy_source.core import manager
 
 from . import dto
 
+
 router = APIRouter(tags=["proxies"])
 
 
@@ -16,6 +17,7 @@ def proxy_to_dto(proxy: manager.proxies.Proxy) -> dto.ProxyDTO:
         port=proxy.port,
         user=proxy.user,
         password=proxy.password,
+        created_at=proxy.created_at,
     )
 
 

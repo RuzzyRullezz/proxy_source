@@ -102,6 +102,9 @@ async def get_list(get_list_query: GetListQuery) -> typing.List[proxies.Proxy]:
             select_stmt = select_stmt.filter(get_list_query.created_from <= db_scheme.ProxyDb.created_at)
         if get_list_query.created_to is not None:
             select_stmt = select_stmt.filter(db_scheme.ProxyDb.created_at <= get_list_query.created_to)
+        select_stmt = select_stmt.order_by(
+            sqlalchemy.desc(db_scheme.ProxyDb.created_at)
+        )
         result = await db_session.execute(select_stmt)
         proxy_db_list: typing.List[db_scheme.ProxyDb] = result.scalars().all()
         return list(map(proxy_from_db, proxy_db_list))
