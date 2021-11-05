@@ -8,7 +8,7 @@ from . import checkers
 from . import storage
 
 
-proxy_interval: datetime.timedelta = datetime.timedelta(days=10)
+proxy_interval: datetime.timedelta = datetime.timedelta(days=3)
 
 
 async def fetch_and_save_proxies() -> int:
