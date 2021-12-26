@@ -1,33 +1,28 @@
 from __future__ import annotations
 
 import ipaddress
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 from pydantic import BaseModel
 
+from proxy_source import config
 from proxy_source.utils.date_time import utc_now
 
-from .. import proxies
-from . import data_repository, http_client
+from proxy_source.core import proxies
+from proxy_source.core.sources import data_repository
+from proxy_source.core.sources import http_client
 
 
 class Proxy(BaseModel):
-    host: str
+    protocols: List[int]
     ip: str
     port: int
-    lastseen: int
-    delay: int
-    cid: int
-    country_code: Optional[str]
-    country_name: Optional[str]
-    city: Optional[str]
-    checks_up: int
-    checks_down: int
-    anon: int
-    http: int
-    ssl: int
-    socks4: int
-    socks5: int
+    quality: int
+    country: str
+    timeout: int
+    stable: int
+    streak: int
+    updated: int
 
 
 class ProxiesList(BaseModel):
@@ -35,37 +30,40 @@ class ProxiesList(BaseModel):
 
 
 class DataRepository(data_repository.DataRepository):
-    def __init__(self):
+
+    def __init__(self, api_key: str):
         scheme = 'https'
-        netloc = 'hidemy.name'
+        netloc = 'api.openproxy.space'
         client = http_client.HttpClient(scheme, netloc)
+        self.api_key = api_key
         super().__init__(
             client,
             Proxy,
             ProxiesList,
         )
 
+    @property
+    def source_type(self) -> proxies.ProxySourceIdType:
+        return proxies.ProxySourceIdType('openproxy')
+
     def retrieve_proxy_dto_list_from_container(self, proxy_container: ProxiesList) -> List[Proxy]:
         return proxy_container.__root__
 
     def get_endpoint(self) -> str:
-        endpoint = '/api/proxylist.txt'
+        endpoint = '/premium/json'
         return endpoint
 
     def get_query_params(self) -> Dict:
         query_params = dict(
-            out='js',
-            http=1,
+            apiKey=self.api_key,
+            smart=1,
+            status=1,
+            protocols=1,
         )
         return query_params
 
-    @property
-    def source_type(self) -> proxies.ProxySourceIdType:
-        return proxies.ProxySourceIdType("hidemyname")
-
     def proxy_from_dto(self, proxy_dto: Proxy) -> proxies.Proxy:
-        schema: proxies.Proxy.ProtocolEnum
-        schema = proxies.Proxy.ProtocolEnum.https if proxy_dto.ssl == 1 else proxies.Proxy.ProtocolEnum.http
+        schema = proxies.Proxy.ProtocolEnum.https
         return proxies.Proxy(
             protocol=schema,
             ip=ipaddress.ip_address(proxy_dto.ip),
@@ -79,5 +77,7 @@ class DataRepository(data_repository.DataRepository):
 
     @classmethod
     def create(cls) -> DataRepository:
-        proxies_repository = cls()
+        assert config.OPENPROXYSPACE_API_KEY is not None, 'set OPENPROXYSPACE_API_KEY param in .env file'
+        api_key = str(config.OPENPROXYSPACE_API_KEY)
+        proxies_repository = cls(api_key)
         return proxies_repository

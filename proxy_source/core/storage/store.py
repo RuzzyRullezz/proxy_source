@@ -118,7 +118,7 @@ def proxy_from_db(proxy_db: db_scheme.ProxyDb) -> proxies.Proxy:
         port=proxy_db.port,
         user=proxy_db.user,
         password=proxy_db.password,
-        source=proxy_db.source,
+        source=proxies.ProxySourceIdType(proxy_db.source),
         is_active=proxy_db.is_active,
     )
     return proxy

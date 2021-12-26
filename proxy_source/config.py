@@ -79,3 +79,6 @@ PROXY_CHECK_MAX_WORKERS: int = config("PROXY_CHECK_MAX_WORKERS", cast=int, defau
 # Proxy Sources
 # https://best-proxies.ru/
 BESTPROXIES_API_KEY: Secret = config("BESTPROXIES_API_KEY", cast=Secret, default=None)
+
+# https://openproxy.space/
+OPENPROXYSPACE_API_KEY: Secret = config("OPENPROXYSPACE_API_KEY", cast=Secret, default=None)
