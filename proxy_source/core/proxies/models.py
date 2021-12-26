@@ -1,8 +1,12 @@
 import dataclasses
 import datetime
+import hashlib
 import ipaddress
 from enum import Enum
-from typing import Optional, Dict, Literal
+from typing import Optional, Dict, Literal, NewType
+
+
+ProxySourceIdType = NewType('ProxySourceIdType', str)
 
 
 @dataclasses.dataclass
@@ -12,17 +16,18 @@ class Proxy:
         http = 'http'
         https = 'https'
 
-    class SourceEnum(str, Enum):
-        best_proxies = 'best_proxies'
-
     protocol: ProtocolEnum = dataclasses.field(hash=False, compare=False)
     ip: ipaddress.IPv4Address = dataclasses.field(hash=True, compare=True)
     port: int = dataclasses.field(hash=True, compare=True)
     user: Optional[str] = dataclasses.field(hash=False, compare=False)
     password: Optional[str] = dataclasses.field(hash=False, compare=False)
-    source: SourceEnum = dataclasses.field(hash=False, compare=False)
+    source: ProxySourceIdType = dataclasses.field(hash=False, compare=False)
     created_at: datetime.datetime = dataclasses.field(hash=False, compare=False)
     is_active: bool = dataclasses.field(hash=False, compare=False)
+
+    def __hash__(self) -> int:
+        data = str(self).encode()
+        return sum(hashlib.md5(data).digest())
 
     def __str__(self) -> str:
         scheme: str = f'{self.protocol}'

@@ -12,8 +12,8 @@ proxy_interval: datetime.timedelta = datetime.timedelta(days=3)
 
 
 async def fetch_and_save_proxies() -> int:
-    proxy_list: typing.List[proxies.Proxy] = await sources.service.get_proxies()
-    proxy_list_not_in_db = await storage.filter_proxy_list(proxy_list)
+    proxy_set: typing.Set[proxies.Proxy] = await sources.service.get_proxies()
+    proxy_list_not_in_db = await storage.filter_proxy_list(proxy_set)
     await storage.create_list(proxy_list_not_in_db)
     return len(proxy_list_not_in_db)
 

@@ -71,7 +71,7 @@ async def get_proxy_db_or_none(
     return proxy_db
 
 
-async def filter_proxy_list(proxy_list: typing.List[proxies.Proxy]) -> typing.List[proxies.Proxy]:
+async def filter_proxy_list(proxy_list: typing.Iterable[proxies.Proxy]) -> typing.List[proxies.Proxy]:
     filtered_proxy_list: typing.List[proxies.Proxy] = []
     async with create_transaction_session() as db_session:
         for proxy in proxy_list:
