@@ -6,10 +6,8 @@ from . import data_repository
 
 def get_data_repository_list() -> Iterable[data_repository.DataRepository]:
     from . import bestproxies
-    from . import openproxy
     repository_class_list: Tuple[Type[data_repository.DataRepository], ...] = (
         bestproxies.DataRepository,
-        openproxy.DataRepository,
     )
     return map(lambda repository_cls: repository_cls.create(), repository_class_list)
 
