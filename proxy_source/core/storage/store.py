@@ -1,7 +1,9 @@
+import contextlib
 import dataclasses
 import datetime
 import ipaddress
 import typing
+from sqlite3 import IntegrityError
 
 import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +23,8 @@ async def create_list(proxy_list: typing.List[proxies.Proxy]):
 async def create(db_session: AsyncSession, proxy: proxies.Proxy):
     proxy_db = proxy_to_db(proxy)
     db_session.add(proxy_db)
-    await db_session.flush()
+    with contextlib.suppress(IntegrityError):
+        await db_session.flush()
 
 
 def proxy_to_db(proxy: proxies.Proxy) -> db_scheme.ProxyDb:
