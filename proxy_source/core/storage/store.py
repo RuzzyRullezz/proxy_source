@@ -3,9 +3,9 @@ import dataclasses
 import datetime
 import ipaddress
 import typing
-from sqlite3 import IntegrityError
 
 import sqlalchemy
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from proxy_source.db.sessions import create_transaction_session
