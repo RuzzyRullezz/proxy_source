@@ -1,6 +1,5 @@
 import asyncio
 
-from proxy_source import config
 from proxy_source.utils.date_time import utc_now
 from proxy_source.core import manager
 
@@ -31,5 +30,4 @@ def main():
 
 
 if __name__ == '__main__':
-    config.setup_logging()
     main()
