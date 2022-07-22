@@ -1,8 +1,5 @@
 import datetime
-import logging
 import typing
-
-from sqlalchemy.exc import IntegrityError
 
 from ..utils.date_time import utc_now
 from . import proxies
@@ -17,12 +14,7 @@ proxy_interval: datetime.timedelta = datetime.timedelta(days=3)
 async def fetch_and_save_proxies() -> int:
     proxy_set: typing.Set[proxies.Proxy] = await sources.service.get_proxies()
     proxy_list_not_in_db = await storage.filter_proxy_list(proxy_set)
-    try:
-        await storage.create_list(proxy_list_not_in_db)
-    except IntegrityError:
-        logger = logging.getLogger()
-        logger.exception(str(proxy_list_not_in_db))
-        raise
+    await storage.create_list(proxy_list_not_in_db)
     return len(proxy_list_not_in_db)
 
 
