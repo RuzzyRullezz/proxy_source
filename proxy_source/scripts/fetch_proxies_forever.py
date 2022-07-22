@@ -6,12 +6,12 @@ from proxy_source.core import manager
 
 async def fetch_once():
     start = utc_now()
+    print(f'Start time: {start}')
     new_proxies_cnt = await manager.fetch_and_save_proxies()
     end = utc_now()
     elapsed_time_seconds = int((end - start).total_seconds())
     print(
-        f'Start time: {start}'
-        f'\nEnd time: {end}'
+        f'End time: {end}'
         f'\nElapsed time: {elapsed_time_seconds} seconds'
         f'\nNew proxies count: {new_proxies_cnt}.'
     )
