@@ -8,15 +8,13 @@ async def run_once():
     start = utc_now()
     print(f'Start time: {start}')
     new_proxies_cnt = await manager.fetch_and_save_proxies()
+    print(f'New proxies count: {new_proxies_cnt}.')
     active_proxies_cnt = await manager.filter_proxies()
+    print(f'Active proxies count: {active_proxies_cnt}.')
     end = utc_now()
+    print(f'End time: {end}.')
     elapsed_time_seconds = int((end - start).total_seconds())
-    print(
-        f'End time: {end}'
-        f'\nElapsed time: {elapsed_time_seconds} seconds'
-        f'\nNew proxies count: {new_proxies_cnt}.'
-        f'\nActive proxies count: {active_proxies_cnt}.'
-    )
+    print(f'Elapsed time: {elapsed_time_seconds} seconds.')
 
 
 async def run_forever():
