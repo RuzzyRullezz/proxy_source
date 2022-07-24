@@ -30,7 +30,7 @@ def add_jobs(scheduler: BaseScheduler):
     )
     scheduler.add_job(
         filter_proxies.filter_proxies,
-        trigger=CronTrigger.from_crontab("*/15 * * * *"),
+        trigger=CronTrigger.from_crontab("0 * * * *"),
         id=filter_proxies.filter_proxies.__name__,
         replace_existing=True,
     )
