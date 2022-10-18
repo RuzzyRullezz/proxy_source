@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
@@ -20,7 +21,12 @@ async def run_once():
 
 async def run_forever():
     while True:
-        await run_once()
+        try:
+            await run_once()
+        except KeyboardInterrupt:
+            return
+        except Exception:
+            logging.getLogger().exception("Some exception here.")
 
 
 def main():
