@@ -21,12 +21,8 @@ async def run_once():
 
 async def run_forever():
     while True:
-        try:
-            await run_once()
-        except KeyboardInterrupt:
-            return
-        except Exception:
-            logging.getLogger().exception("Some exception here.")
+        await run_once()
+
 
 
 def main():
