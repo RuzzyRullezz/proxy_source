@@ -1,4 +1,5 @@
 import asyncio
+import sys
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
@@ -7,15 +8,15 @@ from proxy_source.core import manager
 
 async def run_once():
     start = utc_now()
-    print(f'Start time: {start}')
+    sys.stdout.write(f'Start time: {start}\n')
     new_proxies_cnt = await manager.fetch_and_save_proxies()
-    print(f'New proxies count: {new_proxies_cnt}.')
+    sys.stdout.write(f'New proxies count: {new_proxies_cnt}.\n')
     active_proxies_cnt = await manager.filter_proxies()
-    print(f'Active proxies count: {active_proxies_cnt}.')
+    sys.stdout.write(f'Active proxies count: {active_proxies_cnt}.\n')
     end = utc_now()
-    print(f'End time: {end}.')
+    sys.stdout.write(f'End time: {end}.\n')
     elapsed_time_seconds = int((end - start).total_seconds())
-    print(f'Elapsed time: {elapsed_time_seconds} seconds.')
+    sys.stdout.write(f'Elapsed time: {elapsed_time_seconds} seconds.\n')
 
 
 async def run_forever():
