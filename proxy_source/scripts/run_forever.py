@@ -1,5 +1,4 @@
 import asyncio
-import logging
 
 from proxy_source import config
 from proxy_source.utils.date_time import utc_now
