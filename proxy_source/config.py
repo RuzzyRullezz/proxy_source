@@ -74,8 +74,6 @@ setup_logging: Callable[[], None] = functools.partial(
 
 REAL_IP: Optional[str] = config("REAL_IP", cast=str, default=None)
 
-PROXY_CHECK_MAX_WORKERS: int = config("PROXY_CHECK_MAX_WORKERS", cast=int, default=100)
-
 # Proxy Sources
 # https://best-proxies.ru/
 BESTPROXIES_API_KEY: Secret = config("BESTPROXIES_API_KEY", cast=Secret, default=None)

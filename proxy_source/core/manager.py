@@ -8,7 +8,8 @@ from . import checkers
 from . import storage
 
 
-proxy_interval: datetime.timedelta = datetime.timedelta(days=1)
+proxy_interval: datetime.timedelta = datetime.timedelta(days=3)
+workers_count: int = 300
 
 
 async def fetch_and_save_proxies() -> int:
@@ -26,7 +27,7 @@ async def filter_proxies(interval: datetime.timedelta = proxy_interval) -> int:
         created_to=end,
     )
     proxy_list: typing.List[proxies.Proxy] = await storage.get_list(get_proxy_list_query)
-    active_proxy_list = await checkers.filter_alive_anon_proxies(proxy_list)
+    active_proxy_list = await checkers.filter_alive_anon_proxies(proxy_list, parallels_cnt=workers_count)
     for proxy in active_proxy_list:
         proxy.is_active = True
     await storage.mark_all_as_inactive()
